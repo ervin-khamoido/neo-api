@@ -1,0 +1,35 @@
+.idea
+.vscode
+.env
+.env.*
+!.env.sample
+!.env.*.sample
+.DS_STORE
+
+node_modules
+src/*.js
+build
+dist
+reports
+!src/services/**/reports
+
+config/development.json
+
+test.sh
+serve.sh
+minio.sh
+local-attachments
+
+# Ignore Admin SDK
+*firebase-adminsdk*.json
+
+# ignore doppler configs
+doppler.yaml
+
+# Elastic Beanstalk Files
+# .elasticbeanstalk/*
+.elasticbeanstalk/logs
+# !.elasticbeanstalk/*.cfg.yml
+# !.elasticbeanstalk/*.global.yml
+
+playground*js

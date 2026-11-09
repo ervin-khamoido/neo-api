@@ -1,0 +1,117 @@
+stages:
+ - build
+ - deploy
+
+build-commit:
+  stage: build
+  image: node:18
+  script:
+      # we need to make sure it builds before we deploy
+      - apt-get install libpq-dev g++ make
+      - NODE_ENV=development npm install --legacy-peer-deps
+      - npm run build
+  tags:
+    - build
+  retry: 2
+  rules:
+  - if: $CI_PIPELINE_SOURCE != "merge_request_event"
+    when: always
+
+deploy-to-aws:
+ stage: deploy
+ image: registry.gitlab.com/build-credit-with-me-llc/neo-bank/api/aws-eb
+ script:
+   # determine the AWS keys from the branch variable
+   - echo "Branch | $CI_COMMIT_BRANCH"
+   - echo "Tags | $CI_COMMIT_TAG"
+   - if [[ "$CI_COMMIT_BRANCH" =~ ^feature || "$CI_COMMIT_BRANCH" =~ ^revert ]]; then
+   -   echo "Using Dev vars"
+   -   AWS_ACCESS_KEY_ID="$AWS_DEV_ACCESS_KEY"
+   -   AWS_SECRET_ACCESS_KEY="$AWS_DEV_SECRET_KEY"
+   -   AWS_REGION="$AWS_DEV_REGION"
+   - elif [[ "$CI_COMMIT_BRANCH" =~ ^demo ]]; then
+   -   echo "Using Dev vars"
+   -   AWS_ACCESS_KEY_ID="$AWS_DEV_ACCESS_KEY"
+   -   AWS_SECRET_ACCESS_KEY="$AWS_DEV_SECRET_KEY"
+   -   AWS_REGION="$AWS_DEV_REGION"
+   - elif [[ "$CI_COMMIT_BRANCH" =~ ^release ]]; then
+   -   echo "Using Staging vars"
+   -   AWS_ACCESS_KEY_ID="$AWS_STAGING_ACCESS_KEY"
+   -   AWS_SECRET_ACCESS_KEY="$AWS_STAGING_SECRET_KEY"
+   -   AWS_REGION="$AWS_STAGING_REGION"
+   - elif [[ "$CI_COMMIT_BRANCH" =~ ^hotfix ]]; then
+   -   echo "Using Staging vars"
+   -   AWS_ACCESS_KEY_ID="$AWS_STAGING_ACCESS_KEY"
+   -   AWS_SECRET_ACCESS_KEY="$AWS_STAGING_SECRET_KEY"
+   -   AWS_REGION="$AWS_STAGING_REGION"
+   - elif [[ "$CI_COMMIT_BRANCH" == "develop" ]]; then
+   -   echo "Using Dev vars"
+   -   AWS_ACCESS_KEY_ID="$AWS_DEV_ACCESS_KEY"
+   -   AWS_SECRET_ACCESS_KEY="$AWS_DEV_SECRET_KEY"
+   -   AWS_REGION="$AWS_DEV_REGION"
+   - elif [[ -n "$CI_COMMIT_TAG" ]]; then
+   -   echo "You should only be tagging the master branch! Assumption is that this tag is on master."
+   -   CI_COMMIT_BRANCH="master"
+   -   if [[ "$AWS_ACCESS_KEY_ID" == "" || -z "$AWS_ACCESS_KEY_ID" ]]; then
+   -     echo "You need to manually input the AWS variables when you run the pipeline on master"
+   -     exit 1
+   -   elif [[ "$AWS_SECRET_ACCESS_KEY" == "" || -z "$AWS_SECRET_ACCESS_KEY" ]]; then
+   -     echo "You need to manually input the AWS variables when you run the pipeline on master"
+   -     exit 1
+   -   elif [[ "$AWS_REGION" == "" || -z "$AWS_REGION" ]]; then
+   -     echo "You need to manually input the AWS variables when you run the pipeline on master"
+   -     exit 1
+   -   fi
+   - else
+   -   echo "Not a branch we should deploy to AWS"
+   -   exit 1
+   - fi
+   # - echo "$AWS_ACCESS_KEY_ID | $AWS_SECRET_ACCESS_KEY | $AWS_REGION"
+   # We have to store the AWS credentials in a way that EB CLI can consume them
+   - mkdir ~/.aws/
+   - touch ~/.aws/credentials
+   - printf "[gitlab-cicd]\naws_access_key_id = %s\naws_secret_access_key = %s\n" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" >> ~/.aws/credentials
+   - touch ~/.aws/config
+   - printf "[profile gitlab-cicd]\nregion = %s\noutput=json" "$AWS_REGION" >> ~/.aws/config
+   # Create version number file
+   - touch ./build-number.json
+   - BUILD_INFO='{"buildId":"%s","project":"%s","version":"%s","buildNumber":"%s","buildHash":"%s"}\n'
+   - printf "$BUILD_INFO" "$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG-$CI_PIPELINE_IID-$CI_COMMIT_SHORT_SHA" "$CI_PROJECT_NAME" "$CI_COMMIT_REF_SLUG" "$CI_PIPELINE_IID" "$CI_COMMIT_SHORT_SHA" >> ./build-number.json
+   # commit the new file
+   - git config user.name "neo-bank Gitlab CI/CD"
+   - git config user.email "it@neo-bank.co"
+   - git add ./build-number.json
+   - git commit -m "added build-number.json"
+
+   # DEBUGGING HELPERS: uncomment for debugging
+   # NOTE: The AWS variables only come in from GitLab if the branch is protected, so check that if there are errors!
+   #- printenv | grep AWS
+   #- printenv | grep CI
+   #- cat ~/.aws/config
+   #- cat ~/.aws/credentials
+   #- eb list --profile gitlab-cicd
+   # END HELPERS
+
+   # The Deploy command. This is the meat and potatos. This command:
+   # - zips the code (from the last commit)
+   # - uploads the zip and stores in an s3 bucket
+   #     - this can be viewed in the "App Versions" and is labelled with the branch, commit sha and commit message. This helps w/ versioning
+   # - Builds the Dockerfile from the code in the zip
+   # - Deploys the Docker container to the EB environment specified
+   - eb deploy "$AWS_EB_ENV" -l "${CI_COMMIT_BRANCH////_} - $CI_COMMIT_SHORT_SHA" -m "$CI_COMMIT_MESSAGE" --region $AWS_REGION --timeout 30
+ tags:
+    - deploy
+ retry: 2
+ rules:
+  - if: ($CI_COMMIT_BRANCH =~ /^feature/ || $CI_COMMIT_BRANCH =~ /^revert-/) && $CI_PIPELINE_SOURCE != "merge_request_event"
+    when: manual
+  - if: $CI_COMMIT_BRANCH == "develop" && $CI_PIPELINE_SOURCE != "merge_request_event"
+    when: always
+  - if: $CI_COMMIT_BRANCH =~ /^demo/ && $CI_PIPELINE_SOURCE != "merge_request_event"
+    when: manual
+  - if: $CI_COMMIT_BRANCH =~ /^release/ && $CI_PIPELINE_SOURCE != "merge_request_event"
+    when: always
+  - if: $CI_COMMIT_BRANCH =~ /^hotfix/ && $CI_PIPELINE_SOURCE != "merge_request_event"
+    when: manual
+  - if: $CI_COMMIT_TAG != null && $CI_PIPELINE_SOURCE != "merge_request_event"
+    when: manual

@@ -1,0 +1,11 @@
+# Use this as follows:
+# 1) Install Doppler
+# 2) From terminal at root of project, run > doppler login
+# 3) Copy this file to doppler.yaml
+# 4) Update the values for project and config (environment)
+# 5) Run this > doppler setup
+# 6) Choose "Yes" to use the defaults in this file, or "no" to do something fancy
+
+setup:
+  project: doppler-project-name
+  config: doppler-environment-name

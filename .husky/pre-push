@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# check for GitFlow branch name convention
+local_branch="$(git rev-parse --abbrev-ref HEAD)"
+
+valid_branch_regex="^((feature|release|hotfix|demo)\/[a-z0-9._-]+)|develop|master|(revert-[a-z0-9]+)$"
+
+message="There is something wrong with your branch name. The correct branch names are: develop, master, feature/..., release/..., hotfix/.... Your push will be rejected. You should rename your branch to a valid name and try again."
+
+if [[ ! $local_branch =~ $valid_branch_regex ]]
+then
+    echo "$message"
+    exit 1
+fi
+
+exit 0

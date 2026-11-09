@@ -1,0 +1,11 @@
+services:
+  web:
+    ports:
+      - "${PORT}:${PORT}"
+    build:
+      context: .
+      dockerfile: Dockerfile.aws
+      args:
+        PORT: ${PORT}
+        DOPPLER_TOKEN: ${DOPPLER_TOKEN}
+    

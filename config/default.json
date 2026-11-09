@@ -1,0 +1,168 @@
+{
+  "publicEnv": "development",
+  "appConfig": {
+    "buyDummyDelay": "3000",
+    "sellDummyDelay": "3000",
+    "buyExpirationTimeout": "300",
+    "sellExpirationTimeout": "300",
+    "maxPinAttempts": "5",
+    "maxRewardAmountUsdc": "100",
+    "perTransactionLimits": ""
+  },
+  "feature": {
+    "swagger": "true",
+    "lpBankAccountAvailability": "false",
+    "loggerContext": "",
+    "signUpV1": "true"
+  },
+  "port": "3001",
+  "domain": "localhost:3001",
+  "webhookBaseUrl": "WEBHOOK_BASE_URL",
+  "phoneList": {
+    "white": "null",
+    "black": "null"
+  },
+  "operationsApi": {
+    "yieldKey": "null",
+    "retoolKey": "null"
+  },
+  "dashboardApi": {
+    "key": "null"
+  },
+  "dbConfig": {
+    "user": "postgres",
+    "password": "1234",
+    "host": "localhost",
+    "database": "neobank",
+    "port": "5432"
+  },
+  "auth": {
+    "secret": "neobank_auth_secret",
+    "expiresIn": "86400"
+  },
+  "confirm": {
+    "secret": "neobank_confirm_secret",
+    "expiresIn": "3600"
+  },
+  "pin": {
+    "secret": "neobank_jwt_pin_secret",
+    "expiresIn": "300"
+  },
+  "oneTime": {
+    "secret": "neobank_jwt_one_time_secret",
+    "expiresIn": "10"
+  },
+  "redis": {
+    "port": "6379",
+    "host": "localhost",
+    "password": "1234"
+  },
+  "logger": {
+    "type": "CONSOLE",
+    "logLevel": "debug",
+    "colorize": "false"
+  },
+  "reporter": {
+    "type": "",
+    "dsn": "",
+    "server-name": ""
+  },
+  "mailerProvider": "console",
+  "mailgun": {
+    "apiKey": "",
+    "sendingDomain": "",
+    "from": ""
+  },
+  "smsProvider": "console",
+  "twilio": {
+    "accountSid": "",
+    "authToken": "",
+    "phone": "",
+    "whatsappPhone": ""
+  },
+  "keyValueStorageProvider": "local",
+  "verificationProvider": "self",
+  "zendesk": {
+    "baseUrl": "",
+    "apiKey": "",
+    "email": ""
+  },
+  "branchio": {
+    "url": "",
+    "key": "",
+    "secret": ""
+  },
+  "airtable": {
+    "apiKey": "",
+    "cacheExpiresIn": "",
+    "base": "",
+    "baseYield": ""
+  },
+  "modernTreasury": {
+    "url": "",
+    "organizationId": "",
+    "key": "",
+    "ledgerId": ""
+  },
+  "freshdesk": {
+    "url": "",
+    "key": "",
+    "systemContactEmail": "",
+    "supportGroupId": "",
+    "fields": ""
+  },
+  "paystack": {
+    "url": "",
+    "key": ""
+  },
+  "transactionAvailability": {
+    "after": "04:00:00 PM +0100",
+    "showAt": "03:00:00 PM +0100",
+    "showHours": "12"
+  },
+  "support": {
+    "email": ""
+  },
+  "deepLinkHome": "",
+  "referral": {
+    "prettyLinkHost": ""
+  },
+  "username": {
+    "blacklist": "[]"
+  },
+  "sumsub": {
+    "apiUrl": "",
+    "apiToken": "",
+    "apiSecret": "",
+    "webhookSecretKey": ""
+  },
+  "bridgecard": {
+    "apiUrl": "",
+    "apiAuthToken": "",
+    "apiForwardedForKey": "",
+    "apiVaultUrl": "",
+    "apiSecretKey": "",
+    "apiWebhookSecretKey": "",
+    "cardConfig": "{}",
+    "useBVNVerification": "false"
+  },
+  "bitgo": {
+    "apiUrl": "",
+    "allowProxySelfSigned": "",
+    "apiToken": "",
+    "inOutWalletId": "",
+    "floatWalletId": "",
+    "quarantineWalletId": "",
+    "baseCoin": "",
+    "usdcCoin": "",
+    "inOutWalletEncryptedPRV": "",
+    "inOutWalletPassphrase": "",
+    "accessToken": ""
+  },
+  "identity": {
+    "documentUrlSecret": "123"
+  },
+  "phone": {
+    "phoneOtpAllToWhatsapp": "true"
+  }
+}

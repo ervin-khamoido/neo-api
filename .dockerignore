@@ -1,0 +1,10 @@
+Dockerfile.*
+node_modules
+.env.sample
+# Elastic Beanstalk Files
+
+.elasticbeanstalk/*
+
+.git
+
+.gitignore

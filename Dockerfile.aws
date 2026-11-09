@@ -1,0 +1,60 @@
+FROM node:18 as builder
+ARG NPM_TOKEN
+ENV NPM_TOKEN $NPM_TOKEN
+
+RUN apt-get install libpq-dev g++ make
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN NODE_ENV=development npm install --legacy-peer-deps
+
+COPY . .
+
+RUN npm run build
+
+FROM node:18-alpine as node_modules_builder
+
+RUN apk --no-cache add g++ gcc libgcc libstdc++ libpq postgresql-dev linux-headers make python3
+RUN npm install --quiet node-gyp -g 
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install --legacy-peer-deps
+
+
+FROM keymetrics/pm2:18-alpine
+
+# Install Doppler CLI
+RUN wget -q -t3 'https://packages.doppler.com/public/cli/rsa.8004D9FF50437357.key' -O /etc/apk/keys/cli@doppler-8004D9FF50437357.rsa.pub && \
+    echo 'https://packages.doppler.com/public/cli/alpine/any-version/main' | tee -a /etc/apk/repositories && \
+    apk add doppler
+
+ARG VERSION_ID
+ARG NPM_TOKEN
+
+ENV VERSION_ID ${VERSION_ID:-none}
+ENV NPM_TOKEN $NPM_TOKEN
+
+RUN apk add --no-cache bash libpq
+
+WORKDIR /srv
+
+COPY --from=node_modules_builder /app/node_modules /srv/node_modules
+COPY --from=builder /app/dist /srv/dist
+
+COPY config/ ./config
+COPY *.js ./
+COPY build-number.json /srv/dist
+COPY ecosystem-microservices/ ./ecosystem-microservices
+
+ARG DOPPLER_TOKEN
+ENV DOPPLER_TOKEN=${DOPPLER_TOKEN}
+
+# define port
+ARG PORT
+ENV PORT=${PORT}
+EXPOSE ${PORT}
+
+CMD doppler run -- pm2-runtime start ecosystem.config.js

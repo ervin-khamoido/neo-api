@@ -1,0 +1,51 @@
+FROM node:18 as builder
+ARG NPM_TOKEN
+ENV NPM_TOKEN $NPM_TOKEN
+
+RUN apt-get install libpq-dev g++ make
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN NODE_ENV=development npm ci --legacy-peer-deps
+
+COPY . .
+
+RUN npm run build
+
+RUN chmod +x ./await-db.sh
+
+FROM node:18-alpine as node_modules_builder
+
+RUN apk --no-cache add g++ gcc libgcc libstdc++ libpq postgresql-dev linux-headers make python3
+RUN npm install --quiet node-gyp -g
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci --legacy-peer-deps
+
+
+FROM keymetrics/pm2:18-alpine
+
+ARG VERSION_ID
+ARG NPM_TOKEN
+
+ENV VERSION_ID ${VERSION_ID:-none}
+ENV NPM_TOKEN $NPM_TOKEN
+
+RUN apk add --no-cache bash libpq
+
+WORKDIR /srv
+
+COPY --from=node_modules_builder /app/node_modules /srv/node_modules
+COPY --from=builder /app/dist /srv/dist
+
+COPY config/ ./config
+COPY *.js ./
+COPY ecosystem-microservices/ ./ecosystem-microservices
+
+COPY await-db.sh .
+RUN chmod +x ./await-db.sh
+
+CMD ./await-db.sh $DB_HOST:$DB_PORT -- pm2-runtime start ecosystem.config.js

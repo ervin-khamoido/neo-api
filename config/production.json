@@ -1,0 +1,154 @@
+{
+  "port": "PORT",
+  "publicEnv": "PUBLIC_ENV",
+  "domain": "DOMAIN",
+  "dbConfig": {
+    "user": "DB_USER",
+    "password": "DB_PASSWORD",
+    "host": "DB_HOST",
+    "database": "DB_DATABASE",
+    "port": "DB_PORT"
+  },
+  "feature": {
+    "swagger": "FEATURE_SWAGGER",
+    "lpBankAccountAvailability": "FEATURE_LP_BANK_ACCOUNT_AVAILABILITY",
+    "loggerContext": "FEATURE_LOGGER_CONTEXT",
+    "signUpV1": "FEATURE_SIGNUP_V1"
+  },
+  "auth": {
+    "secret": "AUTH_SECRET",
+    "expiresIn": "AUTH_EXPIRES_IN"
+  },
+  "confirm": {
+    "secret": "CONFIRM_SECRET",
+    "expiresIn": "CONFIRM_EXPIRES_IN"
+  },
+  "registration": {
+    "secret": "REGISTRATION_SECRET",
+    "expiresIn": "REGISTRATION_EXPIRES_IN"
+  },
+  "pin": {
+    "secret": "PIN_SECRET",
+    "expiresIn": "PIN_EXPIRES_IN"
+  },
+  "oneTime": {
+    "secret": "ONE_TIME_SECRET",
+    "expiresIn": "ONE_TIME_EXPIRES_IN"
+  },
+  "logger": {
+    "type": "CONSOLE",
+    "logLevel": "debug",
+    "colorize": "false"
+  },
+  "reporter": {
+    "type": "",
+    "dsn": "",
+    "server-name": ""
+  },
+  "mailerProvider": "MAILER_PROVIDER",
+  "mailgun": {
+    "apiKey": "MAILGUN_API_KEY",
+    "sendingDomain": "MAILGUN_SENDING_DOMAIN",
+    "from": "MAILGUN_FROM"
+  },
+  "smsProvider": "SMS_PROVIDER",
+  "twilio": {
+    "accountSid": "TWILIO_ACCOUNT_SID",
+    "authToken": "TWILIO_AUTH_TOKEN",
+    "phone": "TWILIO_PHONE_NUMBER",
+    "whatsappPhone": "TWILIO_WHATSAPP_PHONE_NUMBER"
+  },
+  "keyValueStorageProvider": "KEY_VALUE_STORAGE_PROVIDER",
+  "verificationProvider": "VERIFICATION_PROVIDER",
+  "redis": {
+    "port": "REDIS_PORT",
+    "host": "REDIS_HOST",
+    "password": "REDIS_PASSWORD"
+  },
+  "zendesk": {
+    "baseUrl": "ZENDESK_BASE_URL",
+    "apiKey": "ZENDESK_API_KEY",
+    "email": "ZENDESK_EMAIL"
+  },
+  "branchio": {
+    "url": "BRANCHIO_URL",
+    "key": "BRANCHIO_KEY",
+    "secret": "BRANCHIO_SECRET"
+  },
+  "airtable": {
+    "apiKey": "AIRTABLE_API_KEY",
+    "cacheExpiresIn": "AIRTABLE_CACHE_EXPIRES_IN",
+    "base": "AIRTABLE_BASE",
+    "baseYield": "AIRTABLE_BASE_YIELD"
+  },
+  "modernTreasury": {
+    "url": "MODERNTREASURY_BASE_URL",
+    "organizationId": "MODERNTREASURY_ORGANIZATION_ID",
+    "key": "MODERNTREASURY_API_KEY",
+    "ledgerId": "MODERNTREASURY_LEDGER_ID"
+  },
+  "freshdesk": {
+    "url": "FRESHDESK_BASE_DOMAIN",
+    "key": "FRESHDESK_API_KEY",
+    "systemContactEmail": "FRESHDESK_SYSTEM_CONTACT_EMAIL",
+    "supportGroupId": "FRESHDESK_CUSTOMER_SUPPORT_GROUP_ID",
+    "fields": "FRESHDESK_FIELDS"
+  },
+  "operationsApi": {
+    "yieldKey": "OPERATIONS_API_KEY",
+    "retoolKey": "OPERATIONS_API_KEY_RETOOL"
+  },
+  "dashboardApi": {
+    "key": "DASHBOARD_API_KEY"
+  },
+  "transactionAvailability": {
+    "after": "TRANSACTIONS_AVAILABILITY_AFTER",
+    "showAt": "TRANSACTIONS_AVAILABILITY_SHOW_AT",
+    "showHours": "TRANSACTIONS_AVAILABILITY_SHOW_HOURS"
+  },
+  "support": {
+    "email": "SUPPORT_EMAIL"
+  },
+  "deepLinkHome": "DEEPLINK_HOME",
+  "referral": {
+    "prettyLinkHost": "REFERRAL_PRETTY_LINK_HOST"
+  },
+  "username": {
+    "blacklist": "USERNAME_BLACKLIST"
+  },
+  "sumsub": {
+    "apiUrl": "SUMSUB_API_URL",
+    "apiToken": "SUMSUB_API_TOKEN",
+    "apiSecret": "SUMSUB_API_SECRET",
+    "webhookSecretKey": "SUMSUB_WEBHOOK_SECRET_KEY"
+  },
+  "bridgecard": {
+    "apiUrl": "BRIDGECARD_API_URL",
+    "apiAuthToken": "BRIDGECARD_API_AUTH_TOKEN",
+    "apiVaultUrl": "BRIDGECARD_API_VAULT_URL",
+    "apiForwardedForKey": "BRIDGECARD_API_FORWARDED_FOR_KEY",
+    "apiSecretKey": "BRIDGECARD_API_SECRET_KEY",
+    "apiWebhookSecretKey": "BRIDGECARD_API_WEBHOOK_SECRET_KEY",
+    "cardConfig": "BRIDGECARD_CARD_CONFIG",
+    "useBVNVerification": "BRIDGECARD_USE_BVN_VERIFICATION"
+  },
+  "bitgo": {
+    "apiUrl": "BITGO_API_URL",
+    "allowProxySelfSigned": "BITGO_ALLOW_PROXY_SELFSIGNED",
+    "apiToken": "BITGO_API_TOKEN",
+    "inOutWalletId": "BITGO_IN_OUT_WALLET_ID",
+    "floatWalletId": "BITGO_FLOAT_WALLET_ID",
+    "quarantineWalletId": "BITGO_QUARANTINE_WALLET_ID",
+    "baseCoin": "BITGO_BASE_COIN",
+    "usdcCoin": "BITGO_USDC_COIN",
+    "inOutWalletEncryptedPRV": "BITGO_IN_OUT_WALLET_ENCRYPTED_PRV",
+    "inOutWalletPassphrase": "BITGO_IN_OUT_WALLET_PASSPHRASE",
+    "accessToken": "BITGO_ACCESS_TOKEN"
+  },
+  "identity": {
+    "documentUrlSecret": "IDENTITY_DOCUMENT_URL_SECRET"
+  },
+  "phone": {
+    "phoneOtpAllToWhatsapp": "PHONE_OTP_ALL_TO_WHATASPP"
+  }
+}
